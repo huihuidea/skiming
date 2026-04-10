@@ -1,28 +1,42 @@
+import 'dart:io' show Platform;
+import 'package:babay_pro/pages/register.dart';
+import 'package:babay_pro/store/providers.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:babay_pro/api/HttpService.dart';
 
-class LoginPage extends StatefulWidget {
+class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
 
   @override
-  State<LoginPage> createState() => _LoginPageState();
+  ConsumerState<LoginPage> createState() => _LoginPageState();
 }
 
-class _LoginPageState extends State<LoginPage> {
+class _LoginPageState extends ConsumerState<LoginPage> {
   final _key = GlobalKey<FormState>();
-  final TextEditingController _controller1 = TextEditingController(text: "zhangsan");
-  final TextEditingController _controller2 = TextEditingController(text: "123456");
+  final TextEditingController _controller1 = TextEditingController(
+    text: "zhangsan",
+  );
+  final TextEditingController _controller2 = TextEditingController(
+    text: "123456",
+  );
   var _isSee = false;
-  @override
 
   @override
   Widget build(BuildContext context) {
+    final futureProvier = ref.watch(userProileProvider);
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         foregroundColor: Colors.black,
         elevation: 0,
-        title: Text("Login"),
+        title: futureProvier.when(
+          data: (v) => Text("$v"),
+          error: (r, _) => Text("err"),
+          loading: () => CircularProgressIndicator(),
+        ),
         centerTitle: false,
       ),
       body: SafeArea(
@@ -64,8 +78,10 @@ class _LoginPageState extends State<LoginPage> {
                     labelText: "password",
                     border: OutlineInputBorder(),
                     suffixIcon: InkWell(
-                      child: Icon(_isSee ? Icons.remove_red_eye : Icons.panorama_fish_eye),
-                      onTap: (){
+                      child: Icon(
+                        _isSee ? Icons.remove_red_eye : Icons.panorama_fish_eye,
+                      ),
+                      onTap: () {
                         setState(() {
                           _isSee = !_isSee;
                         });
@@ -84,26 +100,46 @@ class _LoginPageState extends State<LoginPage> {
                       height: 40,
                       child: Checkbox(value: true, onChanged: (v) {}),
                     ),
-                    Text.rich(
-                      TextSpan(
-                        text: "You must know",
-                        children: [
-                          TextSpan(
-                            text: " User agreent",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              decoration: .underline,
+                    Expanded(
+                      child: Text.rich(
+                        TextSpan(
+                          text: "You must know",
+                          children: [
+                            TextSpan(
+                              text: " User agreent",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: .underline,
+                              ),
                             ),
-                          ),
-                          TextSpan(text: " And "),
-                          TextSpan(
-                            text: "User Ploicy",
-                            style: TextStyle(
-                              color: Colors.blue,
-                              decoration: .underline,
+                            TextSpan(text: " And "),
+                            TextSpan(
+                              text: "User Ploicy erewrewrwrerewrr",
+                              style: TextStyle(
+                                color: Colors.blue,
+                                decoration: .underline,
+                              ),
                             ),
-                          ),
-                        ],
+                            TextSpan(
+                              text: "if you have not accout ,please to ",
+                              children: [
+                                TextSpan(
+                                  text: "register",
+                                  style: TextStyle(
+                                    decoration: .underline,
+                                    color: Colors.red,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = (){
+                                    Navigator.push(context, MaterialPageRoute(builder: (cxt) {
+                                      return Register();
+                                    }));
+                                }
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],
@@ -115,29 +151,52 @@ class _LoginPageState extends State<LoginPage> {
                   width: .infinity,
                   height: 44,
                   child: ElevatedButton(
-                    onPressed: () {
+                    onPressed: () async {
                       if (_key.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (cxt) {
-                            return AlertDialog(
-                              title: Text("success"),
-                              actions: [
-                                TextButton(onPressed: (){
-                                  Navigator.pop(cxt);
-                                  Navigator.pop(context);
-                                }, child: Text("Good"))
-                              ],
-                            );
-                          },
-                        );
+                        final pamrams = {
+                          "username": _controller1.text,
+                          "password": _controller2.text,
+                        };
+                        print("Button pressed $pamrams");
+                        try {
+                          final res = await HttpService().post(
+                            '/login',
+                            pamrams,
+                          );
+                          print("Login success: ${res}");
+                        } catch (e) {
+                          print("error===$e");
+                          // 登录失败
+                          String errorMessage =
+                              "Login failed. Please try again.";
+
+                          showDialog(
+                            context: context,
+                            builder: (cxt) {
+                              return AlertDialog(
+                                title: Text("Login Error"),
+                                content: Text(errorMessage),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(cxt);
+                                    },
+                                    child: Text("OK"),
+                                  ),
+                                ],
+                              );
+                            },
+                          );
+                        }
                       } else {
                         showDialog(
                           context: context,
                           builder: (cxt) {
                             return AlertDialog(
-                              title: Text("warring"),
-                              content: Text("Login has error"),
+                              title: Text("Warning"),
+                              content: Text(
+                                "Please fill in all required fields",
+                              ),
                               actions: [
                                 TextButton(
                                   onPressed: () {

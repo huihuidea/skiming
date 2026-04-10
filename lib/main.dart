@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'config/app_pages.dart';
 import 'widgets/bottom_navigation_bar.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+// GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main(List<String> args) {
-  runApp(const MyApp());
+  runApp(
+    ProviderScope(
+      child: MyApp()
+    )
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -15,6 +22,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int currentIndex = 0;
+  late FToast fToast;
 
   @override
   Widget build(BuildContext context) {

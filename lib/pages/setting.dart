@@ -1,11 +1,16 @@
 import 'package:babay_pro/pages/login.dart';
+import 'package:babay_pro/pages/userInfo/userFeedback.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class Setting extends StatelessWidget {
+import '../store/providers.dart';
+class Setting extends  ConsumerWidget {
   const Setting({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final _appname = ref.watch(appNameProvider);
+    final _userName = ref.watch(userNameProvider);
     return Scaffold(
       backgroundColor: Color(0xffF1F5F9),
       body: SafeArea(
@@ -14,13 +19,13 @@ class Setting extends StatelessWidget {
           slivers: [
             SliverToBoxAdapter(child: _topView()),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
-            SliverToBoxAdapter(child: _userInfo()),
+            SliverToBoxAdapter(child: _userInfo(_userName)),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
             SliverToBoxAdapter(child: _items()),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
             SliverToBoxAdapter(child: _achivement(),),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
-            _itemList(context),
+            _itemList(context,ref),
           ],
         ),
       ),
@@ -71,11 +76,11 @@ class Setting extends StatelessWidget {
   }
 
   //UserInfo
-  Widget _userInfo() {
+  Widget _userInfo(String name) {
     return Column(
       children: [
         Text("Alex Snow", style: TextStyle(fontSize: 20, fontWeight: .bold)),
-        Text('@alex_rides'),
+        Text('@alex_rides : $name'),
       ],
     );
   }
@@ -172,7 +177,7 @@ class Setting extends StatelessWidget {
 
 
   //List
-  Widget _itemList(BuildContext context) {
+  Widget _itemList(BuildContext context, WidgetRef ref) {
     return SliverPadding(
       padding: EdgeInsetsGeometry.all(16),
       sliver: SliverList(
@@ -226,6 +231,9 @@ class Setting extends StatelessWidget {
                     style: TextStyle(fontSize: 16, fontWeight: .w500),
                   ),
                   trailing: Icon(Icons.chevron_right),
+                  onTap: (){
+                    ref.read(userNameProvider.notifier).state = "lisi";
+                  },
                 ),
                 ListTile(
                   leading: Text(
@@ -233,6 +241,11 @@ class Setting extends StatelessWidget {
                     style: TextStyle(fontSize: 16, fontWeight: .w500),
                   ),
                   trailing: Icon(Icons.chevron_right),
+                  onTap: (){
+                    Navigator.push(context, MaterialPageRoute(builder: (c){
+                      return UserFeedback();
+                    }));
+                  },
                 ),
                 ListTile(
                   leading: Text(

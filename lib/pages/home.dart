@@ -1,13 +1,15 @@
+import 'package:babay_pro/pages/userInfo/userSetting.dart';
+import 'package:babay_pro/store/providers.dart';
 import 'package:babay_pro/widgets/home_card.dart';
 import 'package:flutter/material.dart';
-
 import '../widgets/home_recent.dart';
-
-class HomePage extends StatelessWidget {
+import 'package:flutter_riverpod/flutter_riverpod.dart'
+;
+class HomePage extends ConsumerWidget {
   const HomePage({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -15,7 +17,7 @@ class HomePage extends StatelessWidget {
             padding: EdgeInsets.all(16),
             child: Column(
               children: [
-                _usrInfo(),
+                _usrInfo(context,ref),
                 SizedBox(height: 40),
                 _CicleData(),
                 SizedBox(height: 32),
@@ -31,7 +33,7 @@ class HomePage extends StatelessWidget {
   }
 
   //Header - userInfo
-  Widget _usrInfo() {
+  Widget _usrInfo(BuildContext cxt, WidgetRef ref) {
     return Container(
       child: Row(
         mainAxisAlignment: .spaceBetween,
@@ -52,24 +54,36 @@ class HomePage extends StatelessWidget {
               ),
               //text2
               Text(
-                "Good morning, Alex",
+                "Good morning, ${ref.watch(userNameProvider)}",
                 style: TextStyle(fontSize: 24, fontWeight: .w500),
               ),
             ],
           ),
           //avater
-          Container(
-            decoration: BoxDecoration(
-              shape: .circle,
-              border: Border.all(color: Colors.grey, width: 2),
-            ),
-            child: CircleAvatar(
-              radius: 24,
-              backgroundColor: Colors.grey,
-              backgroundImage: NetworkImage(
-                "https://picsum.photos/id/237/200/300",
+          InkWell(
+            child: Container(
+              decoration: BoxDecoration(
+                shape: .circle,
+                border: Border.all(color: Colors.grey, width: 2),
+              ),
+              child: CircleAvatar(
+                radius: 24,
+                backgroundColor: Colors.grey,
+                backgroundImage: NetworkImage(
+                  "https://picsum.photos/id/237/200/300",
+                ),
               ),
             ),
+            onTap: () {
+              Navigator.push(
+                cxt,
+                MaterialPageRoute(
+                  builder: (con) {
+                    return Usersetting();
+                  },
+                ),
+              );
+            },
           ),
         ],
       ),
@@ -171,8 +185,8 @@ class HomePage extends StatelessWidget {
               TextButton(onPressed: () {}, child: Text("History")),
             ],
           ),
-          SizedBox(height: 12,),
-          HomeRecent()
+          SizedBox(height: 12),
+          HomeRecent(),
         ],
       ),
     );
