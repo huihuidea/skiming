@@ -16,6 +16,10 @@ class Register extends StatefulWidget {
 class _RegisterState extends State<Register> {
   @override
   final _formKey = GlobalKey<FormState>();
+
+  final TextEditingController _controller1 = TextEditingController();
+  final TextEditingController _controller2 = TextEditingController();
+
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -32,6 +36,7 @@ class _RegisterState extends State<Register> {
           child: Column(
             children: [
               TextFormField(
+                controller: _controller1,
                 decoration: InputDecoration(
                   hintText: "userName",
                   labelText: "UserName",
@@ -43,6 +48,7 @@ class _RegisterState extends State<Register> {
               ),
               SizedBox(height: 16),
               TextFormField(
+                controller: _controller2,
                 validator: (v) {
                   return v?.isEmpty == true ? "should not be null" : null;
                 },
@@ -62,38 +68,33 @@ class _RegisterState extends State<Register> {
                   onPressed: () async {
                     if (_formKey.currentState!.validate()) {
                       Map<String, String> params = {
-                        'username': 'ddd',
-                        'password': '123456',
+                        'username': _controller1.text,
+                        'password': _controller2.text,
                       };
                       try {
                         final res = await HttpService().post(
                           "/register",
                           params,
                         );
-                       final resReqModel =  ApiResponse<RegosterModel.Register>.fromJson(res.data, (data) => RegosterModel.Register.formJosn(data as Map<String, dynamic>));
-                       if (resReqModel.code == 0) {
-                         Fluttertoast.showToast(msg: "register success");
-                       } else {
-                         Fluttertoast.showToast(msg: resReqModel.message);
-                       }
-                        // final model = RegosterModel.Register.formJosn(res.data);
-                        // if (model.code == 0) {
-                        //   Fluttertoast.showToast(
-                        //     msg: "success: Reigster success",
-                        //   );
-                        //   Navigator.pop(context);
-                        // } else {
-                        //   Fluttertoast.showToast(
-                        //     msg: "error: ${model.message}",
-                        //   );
-                        // }
-                        // print("model ${model.message}");
+                        final resReqModel =
+                            ApiResponse<RegosterModel.Register>.fromJson(
+                              res.data,
+                              (data) => RegosterModel.Register.formJosn(
+                                data as Map<String, dynamic>,
+                              ),
+                            );
+                        if (resReqModel.code == 0) {
+                          Fluttertoast.showToast(msg: "register success");
+                          Navigator.pop(context);
+                        } else {
+                          Fluttertoast.showToast(msg: resReqModel.message);
+                        }
                       } catch (e) {
-                        Fluttertoast.showToast(msg: "error: $e");
+                        Fluttertoast.showToast(msg: "Throw a error: $e");
                         print(e);
                       }
                     } else {
-                      Fluttertoast.showToast(msg: "Register error");
+                      Fluttertoast.showToast(msg: "Please you check");
                     }
                   },
                   child: Text("Sign in"),
