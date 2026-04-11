@@ -114,7 +114,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             ),
                             TextSpan(text: " And "),
                             TextSpan(
-                              text: "User Ploicy erewrewrwrerewrr",
+                              text: "User Ploicy ",
                               style: TextStyle(
                                 color: Colors.blue,
                                 decoration: .underline,
