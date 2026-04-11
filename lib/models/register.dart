@@ -8,3 +8,4 @@ class Register {
     return Register(code: json["code"], message: json["message"]);
   }
 }
+

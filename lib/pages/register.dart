@@ -1,9 +1,11 @@
 import 'dart:io';
 
 import 'package:babay_pro/api/HttpService.dart';
+import 'package:babay_pro/models/ApiResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:babay_pro/models/register.dart' as RegosterModel;
+
 class Register extends StatefulWidget {
   const Register({super.key});
 
@@ -33,21 +35,21 @@ class _RegisterState extends State<Register> {
                 decoration: InputDecoration(
                   hintText: "userName",
                   labelText: "UserName",
-                  border: OutlineInputBorder()
+                  border: OutlineInputBorder(),
                 ),
-                validator: (v){
+                validator: (v) {
                   return v?.isEmpty == true ? "should not be null" : null;
                 },
               ),
-              SizedBox(height: 16,),
+              SizedBox(height: 16),
               TextFormField(
-                validator: (v){
+                validator: (v) {
                   return v?.isEmpty == true ? "should not be null" : null;
                 },
                 decoration: InputDecoration(
-                    hintText: "password",
-                    labelText: "Password",
-                    border: OutlineInputBorder(),
+                  hintText: "password",
+                  labelText: "Password",
+                  border: OutlineInputBorder(),
                 ),
               ),
               //Space
@@ -56,30 +58,54 @@ class _RegisterState extends State<Register> {
               SizedBox(
                 width: .infinity,
                 height: 44,
-                child: ElevatedButton(onPressed: () async {
-                  if (_formKey.currentState!.validate()) {
-                      Map<String,String> params = {
-                        'username' : 'ddd',
-                        'password' : '123456'
+                child: ElevatedButton(
+                  onPressed: () async {
+                    if (_formKey.currentState!.validate()) {
+                      Map<String, String> params = {
+                        'username': 'ddd',
+                        'password': '123456',
                       };
-                     try {
-                       final res = await HttpService().post("/register", params);
-                       final model = RegosterModel.Register.formJosn(res.data);
-                       print("model ${model.message}");
-                     } catch (e) {
-                       Fluttertoast.showToast(msg: "error: $e");
-                     }
-                  } else {
+                      try {
+                        final res = await HttpService().post(
+                          "/register",
+                          params,
+                        );
+                       final resReqModel =  ApiResponse<RegosterModel.Register>.fromJson(res.data, (data) => RegosterModel.Register.formJosn(data as Map<String, dynamic>));
+                       if (resReqModel.code == 0) {
+                         Fluttertoast.showToast(msg: "register success");
+                       } else {
+                         Fluttertoast.showToast(msg: resReqModel.message);
+                       }
+                        // final model = RegosterModel.Register.formJosn(res.data);
+                        // if (model.code == 0) {
+                        //   Fluttertoast.showToast(
+                        //     msg: "success: Reigster success",
+                        //   );
+                        //   Navigator.pop(context);
+                        // } else {
+                        //   Fluttertoast.showToast(
+                        //     msg: "error: ${model.message}",
+                        //   );
+                        // }
+                        // print("model ${model.message}");
+                      } catch (e) {
+                        Fluttertoast.showToast(msg: "error: $e");
+                        print(e);
+                      }
+                    } else {
                       Fluttertoast.showToast(msg: "Register error");
-                  }
-                }, child: Text("Sign in")),
+                    }
+                  },
+                  child: Text("Sign in"),
+                ),
               ),
-              SizedBox(height: 32,)
+              SizedBox(height: 32),
             ],
           ),
         ),
       ),
     );
   }
+
   // Form
 }
