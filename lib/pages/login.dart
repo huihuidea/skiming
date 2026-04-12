@@ -169,7 +169,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                          final model = ApiResponse<LoginModel>.fromJson(res.data, (data) => LoginModel.fromJson(data  as Map<String, dynamic>));
                          print("userInfo ${model.data?.userInfo.createdAt}");
                          if (model.code == 0) {
-                           Fluttertoast.showToast(msg: "${model.message}");
+                           Fluttertoast.showToast(msg: "${model.message} vip:${model.data?.userInfo.vip.level}");
 
                          } else {
                            Fluttertoast.showToast(msg: "Login error ${model.message}");
