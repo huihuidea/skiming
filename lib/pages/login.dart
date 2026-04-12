@@ -1,10 +1,13 @@
 import 'dart:io' show Platform;
+import 'package:babay_pro/models/ApiResponse.dart';
+import 'package:babay_pro/models/loginModel.dart';
 import 'package:babay_pro/pages/register.dart';
 import 'package:babay_pro/store/providers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:babay_pro/api/HttpService.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginPage extends ConsumerStatefulWidget {
   const LoginPage({super.key});
@@ -163,7 +166,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                             '/login',
                             pamrams,
                           );
-                          print("Login success: ${res}");
+                         final model = ApiResponse<LoginModel>.fromJson(res.data, (data) => LoginModel.fromJson(data  as Map<String, dynamic>));
+                         print("userInfo ${model.data?.userInfo.createdAt}");
+                         if (model.code == 0) {
+                           Fluttertoast.showToast(msg: "${model.message}");
+
+                         } else {
+                           Fluttertoast.showToast(msg: "Login error ${model.message}");
+                         }
                         } catch (e) {
                           print("error===$e");
                           // 登录失败

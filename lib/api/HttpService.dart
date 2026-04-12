@@ -23,11 +23,11 @@ class HttpService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options,handle) {
-          print("onRequest---:$options");
+          print("onRequest---:${options.uri} ${options.method} ${options.data}");
          return handle.next(options);
         },
         onResponse: (options,handle) {
-          print("onResponse---:$options");
+          print("onResponse---:${options.data}");
           return handle.next(options);
         },
         onError: (error, handle) {
