@@ -1,12 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'Utils/Storage.dart';
 import 'config/app_pages.dart';
 import 'widgets/bottom_navigation_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 // GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-void main(List<String> args) {
+void main(List<String> args) async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Storage.init();
   runApp(
     ProviderScope(
       child: MyApp()

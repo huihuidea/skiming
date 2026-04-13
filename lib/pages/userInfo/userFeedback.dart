@@ -40,7 +40,7 @@ class _UserFeedbackState extends State<UserFeedback> {
           msg: "Sumit success",
           gravity: .TOP,
         );
-        Navigator.pop(context);
+        _controller.text = "";
       } else {
         Fluttertoast.showToast(msg: "Sumit error: ${model.message}");
       }

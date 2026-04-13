@@ -1,4 +1,5 @@
 import 'dart:io' show Platform;
+import 'package:babay_pro/Utils/Storage.dart';
 import 'package:babay_pro/models/ApiResponse.dart';
 import 'package:babay_pro/models/loginModel.dart';
 import 'package:babay_pro/pages/register.dart';
@@ -55,6 +56,10 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               "${model.message} vip:${model.data?.userInfo.vip.level}",
               gravity: .CENTER
             );
+            if(model.data?.token != null) {
+              Storage.saveToken(model.data!.token);
+              Navigator.pop(context);
+            }
           } else {
             Fluttertoast.showToast(
               msg: "Login error ${model.message}",
