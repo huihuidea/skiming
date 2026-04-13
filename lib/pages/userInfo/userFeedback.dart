@@ -14,34 +14,39 @@ class UserFeedback extends StatefulWidget {
 }
 
 class _UserFeedbackState extends State<UserFeedback> {
-
   final TextEditingController _controller = TextEditingController();
 
   // 提交接口
   void _submitFeedback() async {
-    if(_controller.text.isEmpty) {
+    if (_controller.text.isEmpty) {
       // Fluttertoast.showToast(msg: "Please Input content");
       EasyLoading.showToast("Please Input content");
       return;
     }
     EasyLoading.show(status: "loading");
-    final params = {'content': _controller.text, 'userId': '69dc3d59e61b46abf7bd2c9a'};
+    final params = {
+      'content': _controller.text,
+      'userId': '69dc3d59e61b46abf7bd2c9a',
+    };
     try {
       final res = await HttpService().post("/feedback", params);
       final model = ApiResponse<Feedbackmodel>.fromJson(
         res.data,
         (data) => Feedbackmodel.fromJson(data as Map<String, dynamic>),
       );
-      EasyLoading.dismiss()
-;      if (model.code == 0) {
-        Fluttertoast.showToast(msg: "Sumit success ${model.data?.content}",gravity: .TOP);
+      EasyLoading.dismiss();
+      if (model.code == 0) {
+        Fluttertoast.showToast(
+          msg: "Sumit success",
+          gravity: .TOP,
+        );
         Navigator.pop(context);
       } else {
-        Fluttertoast.showToast(msg: "Sumit error");
+        Fluttertoast.showToast(msg: "Sumit error: ${model.message}");
       }
     } catch (e) {
       EasyLoading.dismiss();
-      Fluttertoast.showToast(msg: "Sumit Throw a error $e");
+      Fluttertoast.showToast(msg: "Sumit Throw a error: $e");
     }
   }
 

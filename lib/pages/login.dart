@@ -5,6 +5,7 @@ import 'package:babay_pro/pages/register.dart';
 import 'package:babay_pro/store/providers.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:babay_pro/api/HttpService.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -18,17 +19,95 @@ class LoginPage extends ConsumerStatefulWidget {
 
 class _LoginPageState extends ConsumerState<LoginPage> {
   final _key = GlobalKey<FormState>();
-  final TextEditingController _controller1 = TextEditingController(
-    text: "zhangsan",
-  );
-  final TextEditingController _controller2 = TextEditingController(
-    text: "123456",
-  );
+  final TextEditingController _controller1 = TextEditingController();
+  final TextEditingController _controller2 = TextEditingController();
   var _isSee = false;
 
   @override
   Widget build(BuildContext context) {
     final futureProvier = ref.watch(userProileProvider);
+
+    //login submit
+    void _submit() async {
+      if (_key.currentState!.validate()) {
+        final pamrams = {
+          "username": _controller1.text,
+          "password": _controller2.text,
+        };
+        print("Button pressed $pamrams");
+        EasyLoading.show();
+        try {
+          final res = await HttpService().post(
+            '/login',
+            pamrams,
+          );
+          final model = ApiResponse<LoginModel>.fromJson(
+            res.data,
+                (data) => LoginModel.fromJson(
+              data as Map<String, dynamic>,
+            ),
+          );
+          print("userInfo ${model.data?.userInfo.createdAt}");
+          EasyLoading.dismiss();
+          if (model.code == 0) {
+            Fluttertoast.showToast(
+              msg:
+              "${model.message} vip:${model.data?.userInfo.vip.level}",
+              gravity: .CENTER
+            );
+          } else {
+            Fluttertoast.showToast(
+              msg: "Login error ${model.message}",
+            );
+          }
+        } catch (e) {
+          EasyLoading.dismiss();
+          print("error===$e");
+          // 登录失败
+          String errorMessage =
+              "Login failed. Please try again.";
+
+          showDialog(
+            context: context,
+            builder: (cxt) {
+              return AlertDialog(
+                title: Text("Login Error"),
+                content: Text(errorMessage),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Navigator.pop(cxt);
+                    },
+                    child: Text("OK"),
+                  ),
+                ],
+              );
+            },
+          );
+        }
+      } else {
+        showDialog(
+          context: context,
+          builder: (cxt) {
+            return AlertDialog(
+              title: Text("Warning"),
+              content: Text(
+                "Please fill in all required fields",
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.pop(cxt);
+                  },
+                  child: Text("I know"),
+                ),
+              ],
+            );
+          },
+        );
+      }
+    }
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -133,11 +212,16 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                                     color: Colors.red,
                                   ),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = (){
-                                    Navigator.push(context, MaterialPageRoute(builder: (cxt) {
-                                      return Register();
-                                    }));
-                                }
+                                    ..onTap = () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (cxt) {
+                                            return Register();
+                                          },
+                                        ),
+                                      );
+                                    },
                                 ),
                               ],
                             ),
@@ -154,71 +238,8 @@ class _LoginPageState extends ConsumerState<LoginPage> {
                   width: .infinity,
                   height: 44,
                   child: ElevatedButton(
-                    onPressed: () async {
-                      if (_key.currentState!.validate()) {
-                        final pamrams = {
-                          "username": _controller1.text,
-                          "password": _controller2.text,
-                        };
-                        print("Button pressed $pamrams");
-                        try {
-                          final res = await HttpService().post(
-                            '/login',
-                            pamrams,
-                          );
-                         final model = ApiResponse<LoginModel>.fromJson(res.data, (data) => LoginModel.fromJson(data  as Map<String, dynamic>));
-                         print("userInfo ${model.data?.userInfo.createdAt}");
-                         if (model.code == 0) {
-                           Fluttertoast.showToast(msg: "${model.message} vip:${model.data?.userInfo.vip.level}");
-
-                         } else {
-                           Fluttertoast.showToast(msg: "Login error ${model.message}");
-                         }
-                        } catch (e) {
-                          print("error===$e");
-                          // 登录失败
-                          String errorMessage =
-                              "Login failed. Please try again.";
-
-                          showDialog(
-                            context: context,
-                            builder: (cxt) {
-                              return AlertDialog(
-                                title: Text("Login Error"),
-                                content: Text(errorMessage),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () {
-                                      Navigator.pop(cxt);
-                                    },
-                                    child: Text("OK"),
-                                  ),
-                                ],
-                              );
-                            },
-                          );
-                        }
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (cxt) {
-                            return AlertDialog(
-                              title: Text("Warning"),
-                              content: Text(
-                                "Please fill in all required fields",
-                              ),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.pop(cxt);
-                                  },
-                                  child: Text("I know"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      }
+                    onPressed: ()  {
+                      _submit();
                     },
                     child: Text("Login"),
                   ),
