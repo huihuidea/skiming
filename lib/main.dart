@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'config/app_pages.dart';
 import 'widgets/bottom_navigation_bar.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 // GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main(List<String> args) {
@@ -44,6 +45,18 @@ class _MyAppState extends State<MyApp> {
           },
         ),
       ),
+        builder: (context, child) {
+          return EasyLoading.init()(
+            context,
+            MediaQuery(
+              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              child: GestureDetector(
+                onTap: () => FocusScope.of(context).unfocus(),
+                child: child!,
+              ),
+            ),
+          );
+        }
     );
   }
 }

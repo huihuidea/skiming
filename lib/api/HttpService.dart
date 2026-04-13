@@ -23,7 +23,8 @@ class HttpService {
     _dio.interceptors.add(
       InterceptorsWrapper(
         onRequest: (options,handle) {
-          print("onRequest---:${options.uri} ${options.method} ${options.data}");
+          options.headers['authorization'] = "Bearer k80gxbykqu8mnwhownl";
+          print("onRequest---: ${options.uri} ${options.method} ${options.headers} ${options.data}");
          return handle.next(options);
         },
         onResponse: (options,handle) {
