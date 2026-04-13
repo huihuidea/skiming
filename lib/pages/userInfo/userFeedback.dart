@@ -36,10 +36,7 @@ class _UserFeedbackState extends State<UserFeedback> {
       );
       EasyLoading.dismiss();
       if (model.code == 0) {
-        Fluttertoast.showToast(
-          msg: "Sumit success",
-          gravity: .TOP,
-        );
+        EasyLoading.showToast("Submit success",toastPosition: .center);
         _controller.text = "";
       } else {
         Fluttertoast.showToast(msg: "Sumit error: ${model.message}");

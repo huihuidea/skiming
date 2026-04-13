@@ -2,6 +2,7 @@ import 'package:babay_pro/pages/userInfo/userSetting.dart';
 import 'package:babay_pro/store/providers.dart';
 import 'package:babay_pro/widgets/home_card.dart';
 import 'package:flutter/material.dart';
+import '../store/userInfo.dart';
 import '../widgets/home_recent.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart'
 ;
@@ -34,6 +35,8 @@ class HomePage extends ConsumerWidget {
 
   //Header - userInfo
   Widget _usrInfo(BuildContext cxt, WidgetRef ref) {
+    final _isLogin = ref.watch(isLoginProvider);
+    final _userInfo = ref.watch(userInfoProvider);
     return Container(
       child: Row(
         mainAxisAlignment: .spaceBetween,
@@ -54,7 +57,7 @@ class HomePage extends ConsumerWidget {
               ),
               //text2
               Text(
-                "Good morning, ${ref.watch(userNameProvider)}",
+                "Good morning, ${_isLogin ? _userInfo?.username ?? "Visitor" : "Mrs"}",
                 style: TextStyle(fontSize: 24, fontWeight: .w500),
               ),
             ],

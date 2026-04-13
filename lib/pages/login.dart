@@ -1,9 +1,11 @@
 import 'dart:io' show Platform;
 import 'package:babay_pro/Utils/Storage.dart';
+import 'package:babay_pro/api/user_api.dart';
 import 'package:babay_pro/models/ApiResponse.dart';
 import 'package:babay_pro/models/loginModel.dart';
 import 'package:babay_pro/pages/register.dart';
 import 'package:babay_pro/store/providers.dart';
+import 'package:babay_pro/store/userInfo.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -38,17 +40,9 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         print("Button pressed $pamrams");
         EasyLoading.show();
         try {
-          final res = await HttpService().post(
-            '/login',
-            pamrams,
-          );
-          final model = ApiResponse<LoginModel>.fromJson(
-            res.data,
-                (data) => LoginModel.fromJson(
-              data as Map<String, dynamic>,
-            ),
-          );
+          final model = await UserApi.login(pamrams);
           print("userInfo ${model.data?.userInfo.createdAt}");
+          ref.read(userInfoProvider.notifier).state = model.data?.userInfo;
           EasyLoading.dismiss();
           if (model.code == 0) {
             Fluttertoast.showToast(
@@ -58,7 +52,14 @@ class _LoginPageState extends ConsumerState<LoginPage> {
             );
             if(model.data?.token != null) {
               Storage.saveToken(model.data!.token);
+              ref.read(isLoginProvider.notifier).state = true;
               Navigator.pop(context);
+
+              //get profile
+              final userModel = await UserApi.updateUsrInfo({
+                "username":"zhangsan11"
+              });
+              print("usreinfo==${userModel}");
             }
           } else {
             Fluttertoast.showToast(

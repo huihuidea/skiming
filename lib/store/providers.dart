@@ -1,3 +1,4 @@
+import 'package:babay_pro/Utils/Storage.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 //1 普通的只能读取值
@@ -8,6 +9,10 @@ final appNameProvider = Provider((ref){
 //2 有状态的
 final userNameProvider = StateProvider((ref){
   return "zhangsan";
+});
+
+final isLoginProvider = StateProvider<bool>((ref) {
+  return Storage.isLogin();
 });
 
 //3.异步

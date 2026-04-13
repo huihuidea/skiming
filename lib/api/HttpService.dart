@@ -60,9 +60,19 @@ class HttpService {
   }
 
   // POST 请求
-  Future<Response> post(String path, Map<String, String> pamrams) async {
+  Future<Response> post(String path, Map<String, dynamic> pamrams) async {
     try {
       final response = await _dio.post(path, data: pamrams);
+      return response;
+    } on DioError catch (e) {
+      throw e;
+    }
+  }
+
+  // Patch 请求
+  Future<Response> patch(String path, Map<String, dynamic> pamrams) async {
+    try {
+      final response = await _dio.patch(path, data: pamrams);
       return response;
     } on DioError catch (e) {
       throw e;

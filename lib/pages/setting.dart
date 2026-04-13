@@ -1,10 +1,13 @@
+import 'package:babay_pro/Utils/Storage.dart';
 import 'package:babay_pro/pages/login.dart';
 import 'package:babay_pro/pages/userInfo/userFeedback.dart';
+import 'package:babay_pro/store/userInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../store/providers.dart';
-class Setting extends  ConsumerWidget {
+
+class Setting extends ConsumerWidget {
   const Setting({super.key});
 
   @override
@@ -19,13 +22,13 @@ class Setting extends  ConsumerWidget {
           slivers: [
             SliverToBoxAdapter(child: _topView()),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
-            SliverToBoxAdapter(child: _userInfo(_userName)),
+            SliverToBoxAdapter(child: _userInfo(_userName,ref)),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
             SliverToBoxAdapter(child: _items()),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
-            SliverToBoxAdapter(child: _achivement(),),
+            SliverToBoxAdapter(child: _achivement(ref)),
             SliverToBoxAdapter(child: SizedBox(height: 20)),
-            _itemList(context,ref),
+            _itemList(context, ref),
           ],
         ),
       ),
@@ -67,7 +70,12 @@ class Setting extends  ConsumerWidget {
                 border: Border.all(width: 4, color: Colors.white),
                 boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 10)],
               ),
-              child: ClipOval(child: Image.network("https://picsum.photos/id/870/200/300?grayscale&blur=2",fit: .cover,)),
+              child: ClipOval(
+                child: Image.network(
+                  "https://picsum.photos/id/870/200/300?grayscale&blur=2",
+                  fit: .cover,
+                ),
+              ),
             ),
           ),
         ],
@@ -76,11 +84,13 @@ class Setting extends  ConsumerWidget {
   }
 
   //UserInfo
-  Widget _userInfo(String name) {
+  Widget _userInfo(String name,WidgetRef ref) {
+    final _isLogin = ref.watch(isLoginProvider);
+    final _userInfo = ref.watch(userInfoProvider);
     return Column(
       children: [
-        Text("Alex Snow", style: TextStyle(fontSize: 20, fontWeight: .bold)),
-        Text('@alex_rides : $name'),
+        Text("Hello , ${_isLogin ? _userInfo?.username ?? "Visitor" : "Visitor"} ", style: TextStyle(fontSize: 20, fontWeight: .bold)),
+        Text('Email: ${_userInfo?.email.isNotEmpty == true ? _userInfo!.email : "未设置"}'),
       ],
     );
   }
@@ -126,7 +136,8 @@ class Setting extends  ConsumerWidget {
   }
 
   //Achivements
-  Widget _achivement() {
+  Widget _achivement(WidgetRef ref) {
+    final _isLogin = ref.watch(isLoginProvider);
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
@@ -134,23 +145,44 @@ class Setting extends  ConsumerWidget {
         children: [
           Padding(
             padding: const EdgeInsetsGeometry.symmetric(vertical: 16),
-            child: Text("Achivements",style: TextStyle(fontSize: 14),),
+            child: Text("Achivements", style: TextStyle(fontSize: 14)),
           ),
-           Row(
-              mainAxisAlignment: .start,
-               children: [
-                 _archivementItem(Icons.face,"speed pro", Color(0xffFEF3C7),Color(0xffFEF3C7)),
-                 SizedBox(width: 16,),
-                 _archivementItem(Icons.speed,"speed pro",Color(0xffEFF6FF),Color(0xffFEF3C7)),
-                 SizedBox(width: 16,),
-                 _archivementItem(Icons.alarm,"speed pro",Color(0xffECFDF5),Color(0xffFEF3C7))
-               ],
-           )
+          Row(
+            mainAxisAlignment: .start,
+            children: [
+              _archivementItem(
+                Icons.face,
+                "speed pro",
+                Color(0xffFEF3C7),
+                Color(0xffFEF3C7),
+              ),
+              SizedBox(width: 16),
+              _archivementItem(
+                Icons.speed,
+                "speed pro",
+                Color(0xffEFF6FF),
+                Color(0xffFEF3C7),
+              ),
+              SizedBox(width: 16),
+              _archivementItem(
+                Icons.alarm,
+                "speed pro",
+                Color(0xffECFDF5),
+                Color(0xffFEF3C7),
+              ),
+            ],
+          ),
         ],
       ),
     );
   }
- Widget _archivementItem(IconData icon, String title, Color bg, Color itemColor,) {
+
+  Widget _archivementItem(
+    IconData icon,
+    String title,
+    Color bg,
+    Color itemColor,
+  ) {
     return Container(
       padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
@@ -161,23 +193,19 @@ class Setting extends  ConsumerWidget {
             color: Colors.grey.withOpacity(0.15),
             blurRadius: 10,
             spreadRadius: 8,
-            offset: Offset(0, 4)
-          )
-        ]
-      ),
-      child: Column(
-        children: [
-          Icon(icon),
-          SizedBox(height: 6,),
-          Text("$title")
+            offset: Offset(0, 4),
+          ),
         ],
       ),
+      child: Column(
+        children: [Icon(icon), SizedBox(height: 6), Text("$title")],
+      ),
     );
- }
-
+  }
 
   //List
   Widget _itemList(BuildContext context, WidgetRef ref) {
+    final _isLogin = ref.watch(isLoginProvider);
     return SliverPadding(
       padding: EdgeInsetsGeometry.all(16),
       sliver: SliverList(
@@ -231,7 +259,7 @@ class Setting extends  ConsumerWidget {
                     style: TextStyle(fontSize: 16, fontWeight: .w500),
                   ),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: (){
+                  onTap: () {
                     ref.read(userNameProvider.notifier).state = "lisi";
                   },
                 ),
@@ -241,20 +269,54 @@ class Setting extends  ConsumerWidget {
                     style: TextStyle(fontSize: 16, fontWeight: .w500),
                   ),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: (){
-                    Navigator.push(context, MaterialPageRoute(builder: (c){
-                      return UserFeedback();
-                    }));
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (c) {
+                          return _isLogin ? UserFeedback() : LoginPage();
+                        },
+                      ),
+                    );
                   },
                 ),
                 ListTile(
                   leading: Text(
-                    "Login out",
+                    _isLogin ? "Logout" : "Login",
                     style: TextStyle(fontSize: 16, fontWeight: .w500),
                   ),
                   trailing: Icon(Icons.chevron_right),
                   onTap: () {
-                     Navigator.push(context, MaterialPageRoute(builder: (cxt) => LoginPage()));
+                    if (_isLogin) {
+                      showDialog(
+                        context: context,
+                        builder: (cxt) {
+                          return AlertDialog(
+                            title: Text("Tips"),
+                            content: Text("are you sure to Logout"),
+                            actions: [
+                              TextButton(onPressed: () {
+                                Navigator.pop(context);
+                              }, child: Text("No")),
+                              TextButton(
+                                onPressed: () {
+                                  Storage.cleanToken();
+                                  ref.read(isLoginProvider.notifier).state =
+                                      false;
+                                  Navigator.pop(context);
+                                },
+                                child: Text("Yes"),
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (cxt) => LoginPage()),
+                      );
+                    }
                   },
                 ),
               ],

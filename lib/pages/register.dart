@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:babay_pro/api/HttpService.dart';
+import 'package:babay_pro/api/user_api.dart';
 import 'package:babay_pro/models/ApiResponse.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -30,12 +31,7 @@ class _RegisterState extends State<Register> {
       };
       EasyLoading.show();
       try {
-        final res = await HttpService().post("/register", params);
-        final resReqModel = ApiResponse<RegosterModel.Register>.fromJson(
-          res.data,
-          (data) =>
-              RegosterModel.Register.formJosn(data as Map<String, dynamic>),
-        );
+        final resReqModel = await UserApi.register(params);
         EasyLoading.dismiss();
         if (resReqModel.code == 0) {
           Fluttertoast.showToast(msg: "register success");
