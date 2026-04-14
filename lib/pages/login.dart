@@ -1,5 +1,6 @@
 import 'dart:io' show Platform;
 import 'package:babay_pro/Utils/Storage.dart';
+import 'package:babay_pro/Utils/hive_storage.dart';
 import 'package:babay_pro/api/user_api.dart';
 import 'package:babay_pro/models/ApiResponse.dart';
 import 'package:babay_pro/models/loginModel.dart';
@@ -29,6 +30,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
   @override
   Widget build(BuildContext context) {
     final futureProvier = ref.watch(userProileProvider);
+    final model = ref.watch(userProvider);
 
     //login submit
     void _submit() async {
@@ -42,7 +44,7 @@ class _LoginPageState extends ConsumerState<LoginPage> {
         try {
           final model = await UserApi.login(pamrams);
           print("userInfo ${model.data?.userInfo.createdAt}");
-          ref.read(userInfoProvider.notifier).state = model.data?.userInfo;
+          ref.read(userProvider.notifier).state = model.data?.userInfo;
           EasyLoading.dismiss();
           if (model.code == 0) {
             Fluttertoast.showToast(
@@ -51,8 +53,11 @@ class _LoginPageState extends ConsumerState<LoginPage> {
               gravity: .CENTER
             );
             if(model.data?.token != null) {
-              Storage.saveToken(model.data!.token);
+              //save
+              await Storage.saveToken(model.data!.token);
+              // await HiveStorage.setHive("USERINFO", model.data?.userInfo.toJson());
               ref.read(isLoginProvider.notifier).state = true;
+              ref.read(userProvider.notifier).saveHive(model.data?.userInfo);
               Navigator.pop(context);
 
               //get profile

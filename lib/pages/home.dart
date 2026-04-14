@@ -1,3 +1,4 @@
+import 'package:babay_pro/Utils/hive_storage.dart';
 import 'package:babay_pro/pages/userInfo/userSetting.dart';
 import 'package:babay_pro/store/providers.dart';
 import 'package:babay_pro/widgets/home_card.dart';
@@ -11,6 +12,7 @@ class HomePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final ref1 = ref.watch(userProvider);
     return Scaffold(
       body: SafeArea(
         child: SingleChildScrollView(
@@ -36,7 +38,7 @@ class HomePage extends ConsumerWidget {
   //Header - userInfo
   Widget _usrInfo(BuildContext cxt, WidgetRef ref) {
     final _isLogin = ref.watch(isLoginProvider);
-    final _userInfo = ref.watch(userInfoProvider);
+    final _userInfo = ref.watch(userProvider);
     return Container(
       child: Row(
         mainAxisAlignment: .spaceBetween,

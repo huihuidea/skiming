@@ -4,6 +4,7 @@ import 'package:babay_pro/pages/userInfo/userFeedback.dart';
 import 'package:babay_pro/store/userInfo.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 
 import '../store/providers.dart';
 
@@ -86,7 +87,8 @@ class Setting extends ConsumerWidget {
   //UserInfo
   Widget _userInfo(String name,WidgetRef ref) {
     final _isLogin = ref.watch(isLoginProvider);
-    final _userInfo = ref.watch(userInfoProvider);
+    final _userInfo = ref.watch(userProvider);
+
     return Column(
       children: [
         Text("Hello , ${_isLogin ? _userInfo?.username ?? "Visitor" : "Visitor"} ", style: TextStyle(fontSize: 20, fontWeight: .bold)),

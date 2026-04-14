@@ -4,8 +4,8 @@ class Storage {
   static Future<void> init() async {
    _prefs = await SharedPreferences.getInstance();
   }
-  static void saveToken(String token) async {
-   await _prefs.setString("token", token);
+  static Future<bool> saveToken(String token) async {
+   return await _prefs.setString("token", token);
   }
   static String? getToken() {
     return _prefs.getString("token");

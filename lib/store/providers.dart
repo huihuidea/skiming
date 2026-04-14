@@ -1,4 +1,6 @@
 import 'package:babay_pro/Utils/Storage.dart';
+import 'package:babay_pro/models/userInfo_model.dart';
+import 'package:babay_pro/store/UserController.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/legacy.dart';
 //1 普通的只能读取值
@@ -13,6 +15,10 @@ final userNameProvider = StateProvider((ref){
 
 final isLoginProvider = StateProvider<bool>((ref) {
   return Storage.isLogin();
+});
+
+final userProvider = StateNotifierProvider<UserController,UserInfoModel?>((res) {
+  return UserController();
 });
 
 //3.异步
