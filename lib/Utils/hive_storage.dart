@@ -19,4 +19,8 @@ class HiveStorage {
   static Future<dynamic> getHive(String key) async {
     return _box.get(key);
   }
+
+  static Future removeHive(String key) async {
+    await _box.delete(key);
+  }
 }

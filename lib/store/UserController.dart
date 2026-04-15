@@ -9,14 +9,24 @@ class UserController extends StateNotifier<UserInfoModel?> {
   }
 
  Future<void> loadFormHive()  async{
-    final user = await HiveStorage.getHive("USERINFO");
-    print("loadFormHive---${user}");
-    if (user != null) {
-     final model = UserInfoModel.fromJson(
-       Map<String, dynamic>.from(user as Map),
-     );
-     state = model;
-     print("loadFormHive Model---${model.username}");
+    try {
+      final user = await HiveStorage.getHive("USERINFO");
+      print("loadFormHive---${user}");
+      if (user == null) return;
+      if (user is! Map) {
+        await HiveStorage.removeHive("USERINFO");
+        return;
+      }
+
+      final model = UserInfoModel.fromJson(
+        Map<String, dynamic>.from(user),
+      );
+      state = model;
+      print("loadFormHive Model---${model.username}");
+    } catch (e) {
+      print("loadFormHive error---$e");
+      await HiveStorage.removeHive("USERINFO");
+      state = null;
     }
   }
 

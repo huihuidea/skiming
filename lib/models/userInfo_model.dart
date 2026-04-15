@@ -18,15 +18,25 @@ class UserInfoModel {
     required this.createdAt,
   });
 
-  factory UserInfoModel.fromJson(Map<String, dynamic> json) => UserInfoModel(
-    username: json["username"],
-    gender: json["gender"],
-    avatar: json["avatar"],
-    vip: Vip.fromJson(json["vip"]),
-    address: json["address"],
-    email: json["email"],
-    createdAt: DateTime.parse(json["createdAt"]),
-  );
+  factory UserInfoModel.fromJson(Map<String, dynamic> json) {
+    final vipJson = json["vip"];
+    final createdAtValue = json["createdAt"];
+
+    return UserInfoModel(
+      username: json["username"]?.toString() ?? "",
+      gender: json["gender"]?.toString() ?? "",
+      avatar: json["avatar"]?.toString() ?? "",
+      vip: vipJson is Map
+          ? Vip.fromJson(Map<String, dynamic>.from(vipJson))
+          : Vip.empty(),
+      address: json["address"]?.toString() ?? "",
+      email: json["email"]?.toString() ?? "",
+      createdAt: createdAtValue is DateTime
+          ? createdAtValue
+          : DateTime.tryParse(createdAtValue?.toString() ?? "") ??
+              DateTime.fromMillisecondsSinceEpoch(0),
+    );
+  }
 
   Map<String, dynamic> toJson() => {
     "username": username,
@@ -51,10 +61,14 @@ class Vip {
   });
 
   factory Vip.fromJson(Map<String, dynamic> json) => Vip(
-    level: json["level"],
-    isActive: json["isActive"],
+    level: json["level"] is int
+        ? json["level"] as int
+        : int.tryParse(json["level"]?.toString() ?? "") ?? 0,
+    isActive: json["isActive"] == true,
     expireAt: json["expireAt"],
   );
+
+  factory Vip.empty() => Vip(level: 0, isActive: false, expireAt: null);
 
   Map<String, dynamic> toJson() => {
     "level": level,
