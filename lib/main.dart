@@ -43,7 +43,10 @@ class _MyAppState extends ConsumerState<MyApp> {
         highlightColor: Colors.transparent,
       ),
       home: Scaffold(
-        body: AppPages.pages[currentIndex],
+        body: IndexedStack(
+          index: currentIndex,
+          children: AppPages.pages,
+        ),
         bottomNavigationBar: CustomBottomNavigationBar(
           currentIndex: currentIndex,
           onTap: (index) {
