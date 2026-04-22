@@ -1,11 +1,17 @@
+import 'dart:ffi';
+
 import 'package:babay_pro/Utils/Storage.dart';
 import 'package:babay_pro/pages/login.dart';
 import 'package:babay_pro/pages/userInfo/userFeedback.dart';
 import 'package:babay_pro/store/userInfo.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 
+import '../Utils/NativeApi.dart';
 import '../store/providers.dart';
 
 class Setting extends ConsumerWidget {
@@ -15,6 +21,7 @@ class Setting extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final _appname = ref.watch(appNameProvider);
     final _userName = ref.watch(userNameProvider);
+
     return Scaffold(
       backgroundColor: Color(0xffF1F5F9),
       body: SafeArea(
@@ -208,6 +215,8 @@ class Setting extends ConsumerWidget {
   //List
   Widget _itemList(BuildContext context, WidgetRef ref) {
     final _isLogin = ref.watch(isLoginProvider);
+    final platform =  MethodChannel("com.setting");
+
     return SliverPadding(
       padding: EdgeInsetsGeometry.all(16),
       sliver: SliverList(
@@ -261,8 +270,10 @@ class Setting extends ConsumerWidget {
                     style: TextStyle(fontSize: 16, fontWeight: .w500),
                   ),
                   trailing: Icon(Icons.chevron_right),
-                  onTap: () {
-                    ref.read(userNameProvider.notifier).state = "lisi";
+                  onTap: () async {
+                   final res = await Nativeapi.openCamera();
+                   print("callback：$res");
+                   EasyLoading.showToast(res);
                   },
                 ),
                 ListTile(

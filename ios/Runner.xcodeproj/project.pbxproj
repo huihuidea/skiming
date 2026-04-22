@@ -10,6 +10,8 @@
 		1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */ = {isa = PBXBuildFile; fileRef = 1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */; };
 		331C808B294A63AB00263BE5 /* RunnerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 331C807B294A618700263BE5 /* RunnerTests.swift */; };
 		3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */ = {isa = PBXBuildFile; fileRef = 3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */; };
+		3C1A29282F988F30006BA7E5 /* ChannelManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A29272F988F30006BA7E5 /* ChannelManager.swift */; };
+		3C1A292A2F988FC1006BA7E5 /* CaremarMananger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C1A29292F988FC1006BA7E5 /* CaremarMananger.swift */; };
 		447DE87134A6E7BF438B7A6A /* Pods_RunnerTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C43EEB233D752A9C767EF02 /* Pods_RunnerTests.framework */; };
 		714DAF15AA9E2618A335BF81 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5C95E4AE9BF72FE9D87F7BAA /* Pods_Runner.framework */; };
 		74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 74858FAE1ED2DC5600515810 /* AppDelegate.swift */; };
@@ -51,6 +53,8 @@
 		331C807B294A618700263BE5 /* RunnerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RunnerTests.swift; sourceTree = "<group>"; };
 		331C8081294A63A400263BE5 /* RunnerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = RunnerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
+		3C1A29272F988F30006BA7E5 /* ChannelManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChannelManager.swift; sourceTree = "<group>"; };
+		3C1A29292F988FC1006BA7E5 /* CaremarMananger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CaremarMananger.swift; sourceTree = "<group>"; };
 		5C95E4AE9BF72FE9D87F7BAA /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		5E8906F1A00F6BA8EA1CADE0 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -143,6 +147,8 @@
 				74858FAE1ED2DC5600515810 /* AppDelegate.swift */,
 				7884E8672EC3CC0400C636F2 /* SceneDelegate.swift */,
 				74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */,
+				3C1A29272F988F30006BA7E5 /* ChannelManager.swift */,
+				3C1A29292F988FC1006BA7E5 /* CaremarMananger.swift */,
 			);
 			path = Runner;
 			sourceTree = "<group>";
@@ -157,7 +163,6 @@
 				2A5C99BB3CE3EEF8054FEE91 /* Pods-RunnerTests.release.xcconfig */,
 				5E8906F1A00F6BA8EA1CADE0 /* Pods-RunnerTests.profile.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -385,6 +390,8 @@
 				74858FAF1ED2DC5600515810 /* AppDelegate.swift in Sources */,
 				1498D2341E8E89220040F4C2 /* GeneratedPluginRegistrant.m in Sources */,
 				7884E8682EC3CC0700C636F2 /* SceneDelegate.swift in Sources */,
+				3C1A29282F988F30006BA7E5 /* ChannelManager.swift in Sources */,
+				3C1A292A2F988FC1006BA7E5 /* CaremarMananger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

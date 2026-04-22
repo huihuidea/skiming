@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../pages/cart.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int currentIndex;
@@ -39,7 +40,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
             right: 0,
             child: Center(
               child: GestureDetector(
-                onTap: () => onTap(2),
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute<void>(
+                      fullscreenDialog: true,
+                      builder: (_) => const CartPage(),
+                    ),
+                  );
+                },
                 behavior: HitTestBehavior.opaque,
                 child: Container(
                   width: 56,
